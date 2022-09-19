@@ -1,3 +1,11 @@
+## Image detection package:
+In progress!
+Resources:
+* https://docs.arduino.cc/learn/programming/arduino-and-python
+* 
+
+## _Stepper package:
+
 #Stepper-TB6600
 
 Schematic 

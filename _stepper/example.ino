@@ -3,9 +3,8 @@
 StepperTB myStepper(en, dir, pulse);
 
 // initialize pins
-const int leftMotorButton = 6;
-const int rightMotorButton = 7;
-const int pumpButton = 12;
+const int motorButton = A0;
+const int pumpButton = A1;
 const int pump = 13;
 
 // setup function: runs once
@@ -15,8 +14,7 @@ void setup(){
 	myStepper.initPins();
   pinMode(pump, OUTPUT);
   digitalWrite(pump, HIGH);  // Water off to begin
-  pinMode(leftMotorButton, INPUT);
-  pinMode(rightMotorButton, INPUT);
+  pinMode(motorButton, INPUT);
   pinMode(pumpButton, INPUT);
 }
 
@@ -24,38 +22,26 @@ void setup(){
 // loop function: repeats indefinitely
 // -------------------------------------------------------------------------------
 void loop(){
-  if (readPumpButton()) {
-    water();  // Water for 400 ms
-  }
-  if (readLeftButton()) {
-    test_step(cw);
-  }
-  if (readRightButton()) {
-  test_step(ccw);
-  }
+  water();
+  travel();
 }
 
-int readLeftButton() {
-  if (digitalRead(leftMotorButton) == HIGH) return 1;
-  return 0;
-}
-
-int readRightButton() {
-  if (digitalRead(rightMotorButton) == HIGH) return 1;
-  return 0;
-}
-
-int readPumpButton() {
-  if (digitalRead(pumpButton) == HIGH) return 1;
-  return 0;
+void travel() {
+  if (analogRead(motorButton) < 256) test_step(cw);  // Move right
+  if (analogRead(motorButton) >= 768) test_step(ccw);  // Move left
 }
 
 void water() {
-  digitalWrite(pump, LOW);
-  delay(800);
-  digitalWrite(pump, HIGH);
+  if (analogRead(pumpButton) == 0) {
+    // Water for 400 ms
+    digitalWrite(pump, LOW);
+    delay(800);
+    digitalWrite(pump, HIGH);
+  }
+  return; 
 }
 
+//////// Motor testing functions
 void test_step(int dir){
   
   // Set speed
