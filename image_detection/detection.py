@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 # define a video capture object
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 assert (cap.isOpened())
 
