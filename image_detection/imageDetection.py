@@ -39,4 +39,4 @@ def detectColor(image):
     cv2.waitKey(0)
 
     return output
-
+      

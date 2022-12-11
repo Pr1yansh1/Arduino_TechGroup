@@ -1,3 +1,9 @@
+"""
+TODO:
+1. Wire up Raspberry Pi to Arduino Uno (need to change Uno Code)
+2. Need to improve imaging algorithm by a lot lol...
+"""
+
 import RPi.GPIO as GPIO
 import time
 from enum import Enum
@@ -19,18 +25,19 @@ Initialize pins.
 def init():
     GPIO.setmode(GPIO.BOARD)
     # The following are all active high inputs and outputs
-    GPIO.setup(pins.moveLeftPin, GPIO.OUT)
-    GPIO.setup(pins.waterPin, GPIO.OUT)
-    GPIO.setup(pins.moveRightPin, GPIO.OUT)
-    GPIO.setup(pins.arduinoReadyPin, GPIO.IN) 
+    GPIO.setup(pins.moveLeftPin.value, GPIO.OUT)
+    GPIO.setup(pins.waterPin.value, GPIO.OUT)
+    GPIO.setup(pins.moveRightPin.value, GPIO.OUT)
+    GPIO.setup(pins.arduinoReadyPin.value, GPIO.IN) 
 
 
 def sendCommand(pin):
     assert(pin in pins)
 
-    GPIO.output(pin, True)
+    GPIO.output(pin.value, True)
     time.sleep(1)
-    GPIO.output(pin, False)
+    GPIO.output(pin.value, False)
+
 
 """
 The brain of the algorithm. Loops infinitely until powered off.
@@ -40,16 +47,17 @@ def main():
 
     try: 
         while True:
-            if GPIO.input(pins.arduinoReadyPin):
-                filtered_img = img.detectColor(img.captureImage())
+            if True:  # GPIO.input(pins.arduinoReadyPin.value):
+                original_img = img.captureImage()
+                filtered_img = img.detectColor(original_img)
 
                 sendCommand(pins.moveLeftPin)
             time.sleep(1)
 
     except KeyboardInterrupt:
         print("Expected program termination")
-    except:
-        print("Unexpected program termination")
+    except Exception as e:
+        print(e)
     finally:
         GPIO.cleanup()  # Changes all pins back to inputs
 
