@@ -1,5 +1,6 @@
 """
 TODO:
+0. Setup SSH config on Raspberry Pi
 1. Wire up Raspberry Pi to Arduino Uno (need to change Uno Code)
 2. Need to improve imaging algorithm by a lot lol...
 """

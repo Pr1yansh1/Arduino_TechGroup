@@ -26,17 +26,15 @@ Given an image, return filtered (only green) parts
 Code from https://pyimagesearch.com/2014/08/04/opencv-python-color-detection/
 """
 def detectColor(image):
-    boundaries = [([0, 0, 0], [100, 255, 75])]
 
-    (lower, upper) = boundaries[0]
-    lower = np.array(lower, dtype = "uint8")
-    upper = np.array(upper, dtype = "uint8")
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(image, lower, upper)
-    output = cv2.bitwise_and(image, image, mask = mask)
-
-    cv2.imshow("images", np.hstack([image, output]))
+    mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
+    imask = mask > 0
+    green = np.zeros_like(image, np.uint8)
+    green[imask] = image[imask]
+    cv2.imshow("images", np.hstack([image, green]))
     cv2.waitKey(0)
 
-    return output
-      
+    return green
+    
