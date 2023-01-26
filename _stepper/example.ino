@@ -2,10 +2,15 @@
 // create stepper object 
 StepperTB myStepper(en, dir, pulse);
 
-// initialize pins
-const int motorButton = A0;
-const int pumpButton = A1;
+// Initialize pins
+// Motors and others
 const int pump = 13;
+
+// Raspberry Pi interface
+const int waterSignal = 2;
+const int leftSignal = 3;
+const int rightSignal = 4;
+const int readySignal = 5;
 
 // setup function: runs once
 // -----------------------------------------------------------------------------
@@ -14,30 +19,40 @@ void setup(){
 	myStepper.initPins();
   pinMode(pump, OUTPUT);
   digitalWrite(pump, HIGH);  // Water off to begin
-  pinMode(motorButton, INPUT);
-  pinMode(pumpButton, INPUT);
+
+  pinMode(waterSignal, INPUT);
+  pinMode(leftSignal, INPUT);
+  pinMode(rightSignal, INPUT);
+  pinMode(readySignal, OUTPUT);
+  
+  digitalWrite(readySignal, HIGH);  // Ready to read Raspberry command
+  test_step(ccw);
 }
 
 
 // loop function: repeats indefinitely
 // -------------------------------------------------------------------------------
 void loop(){
-  water();
-  travel();
-}
-
-void travel() {
-  if (analogRead(motorButton) < 256) test_step(cw);  // Move right
-  if (analogRead(motorButton) >= 768) test_step(ccw);  // Move left
+  if (digitalRead(waterSignal) == HIGH) {
+    digitalWrite(readySignal, LOW);
+    water();
+  }
+  else if (digitalRead(leftSignal)) {
+    digitalWrite(readySignal, LOW);
+    test_step(ccw);
+  }
+  else if (digitalRead(rightSignal)) {
+    digitalWrite(readySignal, LOW);
+    test_step(cw);
+  }
+  digitalWrite(readySignal, HIGH);
 }
 
 void water() {
-  if (analogRead(pumpButton) == 0) {
-    // Water for 400 ms
-    digitalWrite(pump, LOW);
-    delay(800);
-    digitalWrite(pump, HIGH);
-  }
+    // Water for 800 ms
+  digitalWrite(pump, LOW);
+  delay(800);
+  digitalWrite(pump, HIGH);
   return; 
 }
 
