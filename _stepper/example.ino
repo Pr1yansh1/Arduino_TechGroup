@@ -24,20 +24,36 @@ void setup() {
   myStepperL.setSpeed(120);  //rpm
   myStepperR.setSpeed(120);  //rpm
   turnOffElectromagnet();
-  reset();
+//  reset();
 }
 
 // This code runs in a continuous loop
 void loop() {
-  delay(100);
+  if (Serial.available() > 0) {
+    //Create a place to hold the incoming message
+    String data = Serial.readStringUntil("\n");
+    Serial.print("You sent me: ");
+    Serial.println(data);
+    
+    int* curr_move = decode(data);
+    Serial.print("x: ");
+    Serial.print(curr_move[1]);
+    Serial.print("\ny: ");
+    Serial.println(curr_move[3]);
+    
+    //masterMove(curr_move);
+    //reset();
+    Serial.println("Shco");
+  }
 }
 
+// extract the x and the y coordinates
 int *decode(String a) {
   static int curr_move[4];
-  curr_move[0] = a[0] - 'a';
-  curr_move[1] = a[1] - '1';
-  curr_move[2] = a[2] - 'a';
-  curr_move[3] = a[3] - '1';
+  curr_move[0] = a[0];
+  curr_move[1] = a[1] - '0';
+  curr_move[2] = a[2];
+  curr_move[3] = a[3] - '0';
   
   return curr_move;
 }

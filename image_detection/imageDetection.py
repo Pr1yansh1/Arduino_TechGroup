@@ -1,6 +1,18 @@
 # Importing the OpenCV library
 import cv2
 import numpy as np
+import serial
+import time
+
+def sendCoordinate(port):
+    # port = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+    # port.reset_input_buffer()
+    while "Shco" not in line:
+        port.write(b"x7y9\n")
+        line = port.readline().decode('utf-8').rstrip()
+        print(line)
+        time.sleep(1)
+
 
 """
 Capture an image from webcam and return frame (NumPy array)
@@ -38,3 +50,7 @@ def detectColor(image):
 
     return green
     
+
+port = serial.Serial('/dev/cu.usbmodem1301', 9600, timeout=1)
+port.reset_input_buffer()
+sendCoordinate(port)
