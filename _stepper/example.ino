@@ -13,22 +13,8 @@ StepperTB myStepperR(dirR, pulseR);
 // -----------------------------------------------------------------------------
 void setup() {
   Serial.begin(9600);
-  pinMode(colA, INPUT);
-  pinMode(colB, INPUT);
-  pinMode(colC, INPUT);
-  pinMode(colD, INPUT);
-  pinMode(colE, INPUT);
-  pinMode(colF, INPUT);
-  pinMode(colG, INPUT);
-  pinMode(colH, INPUT);
-
-  pinMode(enG_L, OUTPUT);
-  pinMode(selC, OUTPUT);
-  pinMode(selB, OUTPUT);
-  pinMode(selA, OUTPUT);
 
   // Until button is pressed, don't enable the muxes
-  digitalWrite(enG_L, HIGH);
   
   // initialize pins
   pinMode(electromagnet,OUTPUT);
@@ -43,7 +29,7 @@ void setup() {
 
 // This code runs in a continuous loop
 void loop() {
-  reset();
+  delay(100);
 }
 
 int *decode(String a) {
